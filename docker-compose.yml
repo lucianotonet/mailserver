@@ -17,7 +17,7 @@ services:
       - ./mail-state:/var/mail-state
       - ./mail-logs:/var/log/mail
       - ./config/:/tmp/docker-mailserver/
-      - ./ssl/:/etc/letsencrypt/live/
+      - ./ssl/${DOMAINNAME}:/etc/letsencrypt/live/${DOMAINNAME}
     environment:
       - ENABLE_SPAMASSASSIN=1
       - ENABLE_CLAMAV=1
@@ -33,6 +33,9 @@ services:
       - POSTFIX_DAGENT=lmtp:dovecot:24
       - REPORT_RECIPIENT=1
       - DOVECOT_MAILBOX_FORMAT=maildir
+      - LETSENCRYPT_DOMAIN=${DOMAINNAME}
+      - SSL_CERT_PATH=/etc/letsencrypt/live/${DOMAINNAME}/fullchain.pem
+      - SSL_KEY_PATH=/etc/letsencrypt/live/${DOMAINNAME}/privkey.pem
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
