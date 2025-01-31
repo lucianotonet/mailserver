@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Create required directories
+mkdir -p maildata
+mkdir -p mailstate
+mkdir -p maillogs
+mkdir -p config
+
+# Set correct permissions
+chmod -R 0700 maildata
+chmod -R 0700 mailstate
+chmod -R 0700 maillogs
+chmod -R 0700 config
+
+# Create initial configuration files if they don't exist
+touch config/postfix-accounts.cf
+touch config/postfix-virtual.cf
+
+echo "Setup completed successfully!"
+
 # Function to display usage
 show_usage() {
     echo "Usage: $0 email add <email> <password>"
