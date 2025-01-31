@@ -1,5 +1,5 @@
 # Use a imagem oficial do docker-mailserver como base
-FROM docker-mailserver/docker-mailserver:latest
+FROM mailserver/docker-mailserver:latest
 
 # Define argumentos que podem ser passados durante o build
 ARG MAIL_DOMAIN
