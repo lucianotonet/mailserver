@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Adicione no início do script
+if [ ! -f .env ]; then
+  echo "ERRO: Arquivo .env não encontrado!"
+  cp .env.example .env
+  echo "Criado .env a partir do exemplo. Edite as variáveis antes de continuar."
+  exit 1
+fi
+
 # Create required directories
 mkdir -p maildata
 mkdir -p mailstate

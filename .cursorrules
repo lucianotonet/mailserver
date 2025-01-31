@@ -8,10 +8,17 @@
 - Criação dos arquivos de configuração do Postfix
 - Criação do script de setup
 - Criação do Dockerfile para deploy no EasyPanel
+- Corrigida configuração do hostname/domainname
+- Adicionado suporte explícito para DNS externo
+- Melhorado mapeamento de volumes
+- Configuração de certificados SSL automatizada
 
 ## Problemas Encontrados
 - Erro no deploy inicial usando Nixpacks
 - Solução: Criação de Dockerfile personalizado para o projeto
+- Erro fatal de hostname/domainname não configurado
+- Problemas potenciais de resolução DNS
+- Estrutura de diretórios para certificados SSL
 
 ## Progresso Atual
 - Projeto base configurado e pronto para uso
@@ -25,6 +32,14 @@
 3. Executar o setup inicial para criar a primeira conta de email
 4. Configurar o webhook no EasyPanel
 5. Realizar o primeiro deploy usando o Dockerfile
+6. Configurar registros MX no DNS
+7. Gerar certificados Let's Encrypt
+8. Testar fluxo de emails entrando/saindo
+9. Configurar autenticação DKIM/DMARC
+10. Validar configuração SPF/DKIM
+11. Testar entrega de emails externos
+12. Configurar políticas de retenção
+13. Implementar backup automático
 
 ## Detalhes Relevantes
 - O projeto utiliza docker-mailserver como base
