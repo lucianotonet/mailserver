@@ -5,45 +5,60 @@
 - Configuração do docker-compose.yml
 - Configuração do ambiente com variáveis (.env.example)
 - Configuração do GitHub Actions para deploy
-- Criação dos arquivos de configuração do Postfix
-- Criação do script de setup
-- Criação do Dockerfile para deploy no EasyPanel
-- Corrigida configuração do hostname/domainname
-- Adicionado suporte explícito para DNS externo
-- Melhorado mapeamento de volumes
-- Configuração de certificados SSL automatizada
+- Configuração do Postfix e Dovecot
+- Organização e limpeza dos scripts de configuração
+- Melhorias na configuração SSL
+- Adicionado suporte a verificação DNS completa
+
+## Scripts do Projeto
+1. setup.sh: Script principal de configuração
+   - Configuração inicial do ambiente
+   - Gerenciamento de contas de email
+   - Orquestração de outros scripts
+
+2. ssl-setup.sh: Gerenciamento de SSL
+   - Geração de certificados auto-assinados
+   - Configuração de CA
+   - Gerenciamento de permissões
+
+3. verificacao-dns.sh: Verificação DNS
+   - Validação de registros A, MX
+   - Verificação de SPF, DMARC, DKIM
+   - Sugestões de configuração
+
+4. check-config.sh: Validação de Configuração
+   - Verificação do docker-compose
+   - Validação do Postfix
+   - Validação do Dovecot
+
+5. entrypoint.sh: Script de Inicialização
+   - Debug de hostname/domainname
+   - Inicialização do mailserver
 
 ## Problemas Encontrados
 - Erro no deploy inicial usando Nixpacks
-- Solução: Criação de Dockerfile personalizado para o projeto
 - Erro fatal de hostname/domainname não configurado
-- Problemas potenciais de resolução DNS
-- Estrutura de diretórios para certificados SSL
+- Problemas com certificados SSL
+- Duplicidade de scripts de configuração (resolvido)
 
 ## Progresso Atual
-- Projeto base configurado e pronto para uso
-- Estrutura de diretórios e arquivos criada
-- Scripts de automação implementados
-- Dockerfile criado para deploy no EasyPanel
+- Scripts organizados e otimizados
+- Estrutura de diretórios e arquivos limpa
+- Configuração SSL melhorada
+- Sistema de verificação DNS robusto
 
 ## Próximos Passos
 1. Configurar o domínio no provedor DNS
-2. Configurar as variáveis de ambiente no arquivo .env
-3. Executar o setup inicial para criar a primeira conta de email
-4. Configurar o webhook no EasyPanel
-5. Realizar o primeiro deploy usando o Dockerfile
-6. Configurar registros MX no DNS
-7. Gerar certificados Let's Encrypt
-8. Testar fluxo de emails entrando/saindo
-9. Configurar autenticação DKIM/DMARC
-10. Validar configuração SPF/DKIM
-11. Testar entrega de emails externos
-12. Configurar políticas de retenção
-13. Implementar backup automático
+2. Executar verificacao-dns.sh para validar configuração
+3. Gerar certificados SSL usando ssl-setup.sh
+4. Configurar a primeira conta de email com setup.sh
+5. Validar configurações com check-config.sh
+6. Realizar o deploy no EasyPanel
+7. Testar fluxo de emails
+8. Configurar backup automático
 
 ## Detalhes Relevantes
-- O projeto utiliza docker-mailserver como base
-- Todas as configurações sensíveis devem ser feitas através de variáveis de ambiente
-- Os arquivos de configuração do Postfix são populados automaticamente pelo script de setup
-- O deploy é automatizado através do GitHub Actions
-- O Dockerfile foi criado para substituir o Nixpacks no processo de deploy 
+- Todos os scripts foram revisados e otimizados
+- Removidos scripts redundantes
+- Padronização de nomes sem acentos
+- Melhor organização da documentação 
