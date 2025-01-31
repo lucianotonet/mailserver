@@ -25,6 +25,7 @@ services:
       - DOMAINNAME=tonet.dev
       - DMS_HOSTNAME=mail.tonet.dev
       - DMS_DOMAINNAME=tonet.dev
+      - OVERRIDE_HOSTNAME=mail.tonet.dev
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
