@@ -17,7 +17,8 @@ services:
       - logs:/var/log/mail
       - config:/tmp/docker-mailserver
       - /etc/localtime:/etc/localtime:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/easypanel/traefik/dump/mail.tonet.dev/certificate.crt:/etc/letsencrypt/live/mail.tonet.dev/fullchain.pem:ro
+      - /etc/easypanel/traefik/dump/mail.tonet.dev/privatekey.key:/etc/letsencrypt/live/mail.tonet.dev/privkey.pem:ro
     environment:
       - HOSTNAME=mail.tonet.dev
       - DOMAINNAME=tonet.dev
