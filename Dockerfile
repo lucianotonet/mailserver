@@ -9,7 +9,15 @@ ENV TZ=America/Sao_Paulo \
     ENABLE_FAIL2BAN=1 \
     ENABLE_POSTGREY=1 \
     MAIL_DOMAIN=tonet.dev \
-    MAIL_HOSTNAME=mail.tonet.dev
+    MAIL_HOSTNAME=mail.tonet.dev \
+    PERMIT_DOCKER=network \
+    ONE_DIR=1 \
+    ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1 \
+    POSTFIX_DAGENT=lmtp:dovecot:24 \
+    REPORT_RECIPIENT=1
+
+# Instala o netcat para healthcheck
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
 # Copia os arquivos de configuração
 COPY config/ /tmp/docker-mailserver/

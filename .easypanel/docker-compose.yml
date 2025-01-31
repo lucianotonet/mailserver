@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mailserver:
     build:
@@ -24,12 +26,32 @@ services:
       - TZ=America/Sao_Paulo
       - MAIL_DOMAIN=tonet.dev
       - MAIL_HOSTNAME=mail.tonet.dev
+      - PERMIT_DOCKER=network
+      - ONE_DIR=1
+      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
+      - POSTFIX_DAGENT=lmtp:dovecot:24
+      - REPORT_RECIPIENT=1
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "25"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - easypanel
 
 volumes:
   data:
+    driver: local
   state:
+    driver: local
   logs:
-  config: 
+    driver: local
+  config:
+    driver: local
+
+networks:
+  easypanel:
+    external: true 
