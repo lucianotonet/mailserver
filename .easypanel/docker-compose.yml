@@ -17,6 +17,8 @@ services:
       - logs:/var/log/mail
       - config:/tmp/docker-mailserver
       - /etc/localtime:/etc/localtime:ro
+      - ./config/hostname.conf:/etc/hostname:ro
+      - ./config/domainname.conf:/etc/domainname:ro
     environment:
       - HOSTNAME=mail.tonet.dev
       - DOMAINNAME=tonet.dev
@@ -34,6 +36,9 @@ services:
       - PERMIT_DOCKER=network
       - POSTFIX_INET_PROTOCOLS=ipv4
       - DOVECOT_INET_PROTOCOLS=ipv4
+      - OVERRIDE_HOSTNAME=mail.tonet.dev
+      - DMS_HOSTNAME=mail.tonet.dev
+      - DMS_DOMAINNAME=tonet.dev
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
