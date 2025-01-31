@@ -33,4 +33,5 @@ EXPOSE 25 465 587 993
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver" ]
 
 # Define o comando padrão
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"] 
+ENTRYPOINT ["/usr/local/bin/dms-wrapper.sh"]
+CMD [] 
