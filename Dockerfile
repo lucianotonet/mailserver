@@ -32,5 +32,5 @@ EXPOSE 25 465 587 993
 # Define o volume para persistência dos dados
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver" ]
 
-# Define o ENTRYPOINT
-ENTRYPOINT ["/usr/local/bin/dms-wrapper.sh"] 
+# Define o comando padrão
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"] 
