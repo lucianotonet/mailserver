@@ -2,7 +2,6 @@
 data/
 state/
 logs/
-config/
 
 # Arquivos de ambiente
 .env
