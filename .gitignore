@@ -1,6 +1,13 @@
+# Diretórios de dados do mailserver
+data/
+state/
+logs/
+config/
+
+# Arquivos de ambiente
 .env
+
 maildata/
 mailstate/
 maillogs/
-config/*
 !config/.gitkeep 
