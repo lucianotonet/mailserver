@@ -32,6 +32,10 @@ EXPOSE 25 465 587 993
 # Define o volume para persistência dos dados
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver" ]
 
+# Copia o script de inicialização
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Define o comando padrão
-ENTRYPOINT ["/usr/local/bin/start-mailserver.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD [] 
