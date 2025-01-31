@@ -3,8 +3,6 @@ version: "3.8"
 services:
   mailserver:
     image: mailserver/docker-mailserver:latest
-    hostname: mail.tonet.dev
-    domainname: tonet.dev
     ports:
       - "25:25"
       - "465:465"
@@ -30,6 +28,8 @@ services:
       - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
       - POSTFIX_DAGENT=lmtp:dovecot:24
       - REPORT_RECIPIENT=1
+      - HOSTNAME=mail.tonet.dev
+      - DOMAINNAME=tonet.dev
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
