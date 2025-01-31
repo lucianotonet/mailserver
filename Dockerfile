@@ -7,7 +7,8 @@ ENV HOSTNAME=mail.tonet.dev \
     MAIL_DOMAIN=tonet.dev \
     MAIL_HOSTNAME=mail.tonet.dev \
     POSTMASTER_ADDRESS=postmaster@tonet.dev \
-    SSL_TYPE=self-signed \
+    SSL_TYPE=letsencrypt \
+    LETSENCRYPT_DOMAIN=mail.tonet.dev \
     TZ=America/Sao_Paulo \
     DMS_DEBUG=1 \
     ENABLE_SPAMASSASSIN=1 \
@@ -25,17 +26,21 @@ ENV HOSTNAME=mail.tonet.dev \
 # Instala o netcat para healthcheck
 RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
-# Cria diretório SSL
-RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA
-
-# Copia os certificados SSL
-COPY config/ssl/mail.tonet.dev-key.pem /tmp/docker-mailserver/ssl/
-COPY config/ssl/mail.tonet.dev-cert.pem /tmp/docker-mailserver/ssl/
-COPY config/ssl/demoCA/cacert.pem /tmp/docker-mailserver/ssl/demoCA/
-COPY config/ssl/demoCA/cakey.pem /tmp/docker-mailserver/ssl/demoCA/
-
-# Define permissões dos certificados
-RUN chmod 600 /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
+# Gera certificados SSL
+RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA \
+    && openssl genrsa -out /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem 4096 \
+    && openssl req -new -x509 \
+        -key /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
+        -out /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem \
+        -days 3650 \
+        -subj "/C=BR/ST=Sao Paulo/L=Sao Paulo/O=Tonet Dev/OU=Mail/CN=mail.tonet.dev" \
+    && openssl req -new -x509 \
+        -keyout /tmp/docker-mailserver/ssl/demoCA/cakey.pem \
+        -out /tmp/docker-mailserver/ssl/demoCA/cacert.pem \
+        -days 3650 \
+        -nodes \
+        -subj "/C=BR/ST=Sao Paulo/L=Sao Paulo/O=Tonet Dev CA/OU=Mail CA/CN=tonet.dev" \
+    && chmod 600 /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
     && chmod 644 /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem \
     && chmod 600 /tmp/docker-mailserver/ssl/demoCA/cakey.pem \
     && chmod 644 /tmp/docker-mailserver/ssl/demoCA/cacert.pem
