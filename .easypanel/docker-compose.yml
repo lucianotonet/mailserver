@@ -17,6 +17,7 @@ services:
       - logs:/var/log/mail
       - config:/tmp/docker-mailserver
       - /etc/localtime:/etc/localtime:ro
+      - ./config/ssl:/tmp/docker-mailserver/ssl:ro
     environment:
       - HOSTNAME=mail.tonet.dev
       - DOMAINNAME=tonet.dev
