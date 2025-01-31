@@ -14,6 +14,14 @@ else
     DOMAINNAME="tonet.dev"
 fi
 
+# Adicionar verificação de variáveis críticas
+if [ -z "${HOSTNAME}" ] || [ -z "${DOMAINNAME}" ]; then
+    echo "ERRO: Variáveis HOSTNAME e DOMAINNAME devem estar configuradas!"
+    echo "HOSTNAME=${HOSTNAME:-mail.tonet.dev}" > /app/.easypanel/.env
+    echo "DOMAINNAME=${DOMAINNAME:-tonet.dev}" >> /app/.easypanel/.env
+    exit 1
+fi
+
 # Criar diretórios necessários
 mkdir -p "${SSL_PATH}/${DOMAINNAME}"
 mkdir -p "${DATA_PATH}"
@@ -38,5 +46,13 @@ chmod -R 0700 "${DATA_PATH}"
 chmod -R 0700 "${STATE_PATH}"
 chmod -R 0700 "${LOGS_PATH}"
 chmod -R 0700 "${CONFIG_PATH}"
+
+# Modificar caminho dos certificados para compatibilidade
+SSL_PATH="/tmp/ssl/${DOMAINNAME}"
+mkdir -p "${SSL_PATH}"
+
+# Garantir links simbólicos para os certificados
+ln -sf "${SSL_PATH}/privkey.pem" "/etc/letsencrypt/live/${DOMAINNAME}/privkey.pem"
+ln -sf "${SSL_PATH}/fullchain.pem" "/etc/letsencrypt/live/${DOMAINNAME}/fullchain.pem"
 
 echo "Inicialização concluída com sucesso!" 

@@ -40,6 +40,8 @@
 - Erro fatal de hostname/domainname não configurado
 - Problemas com certificados SSL
 - Duplicidade de scripts de configuração (resolvido)
+- Configuração de hostname/domainname inconsistente (resolvido)
+- Path de certificados SSL incorreto (resolvido)
 
 ## Progresso Atual
 - Scripts organizados e otimizados
@@ -53,9 +55,8 @@
 3. Gerar certificados SSL usando ssl-setup.sh
 4. Configurar a primeira conta de email com setup.sh
 5. Validar configurações com check-config.sh
-6. Realizar o deploy no EasyPanel
-7. Testar fluxo de emails
-8. Configurar backup automático
+6. Testar fluxo de emails com ferramentas como swaks
+7. Configurar backup automático dos certificados
 
 ## Detalhes Relevantes
 - Todos os scripts foram revisados e otimizados
