@@ -17,15 +17,13 @@ services:
       - logs:/var/log/mail
       - config:/tmp/docker-mailserver
       - /etc/localtime:/etc/localtime:ro
-      - ./config/hostname.conf:/etc/hostname:ro
-      - ./config/domainname.conf:/etc/domainname:ro
     environment:
       - HOSTNAME=mail.tonet.dev
       - DOMAINNAME=tonet.dev
       - MAIL_DOMAIN=tonet.dev
       - MAIL_HOSTNAME=mail.tonet.dev
       - POSTMASTER_ADDRESS=postmaster@tonet.dev
-      - SSL_TYPE=letsencrypt
+      - SSL_TYPE=self-signed
       - TZ=America/Sao_Paulo
       - DMS_DEBUG=1
       - ENABLE_SPAMASSASSIN=1
