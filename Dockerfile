@@ -25,6 +25,21 @@ ENV HOSTNAME=mail.tonet.dev \
 # Instala o netcat para healthcheck
 RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
+# Cria diretório SSL
+RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA
+
+# Copia os certificados SSL
+COPY config/ssl/mail.tonet.dev-key.pem /tmp/docker-mailserver/ssl/
+COPY config/ssl/mail.tonet.dev-cert.pem /tmp/docker-mailserver/ssl/
+COPY config/ssl/demoCA/cacert.pem /tmp/docker-mailserver/ssl/demoCA/
+COPY config/ssl/demoCA/cakey.pem /tmp/docker-mailserver/ssl/demoCA/
+
+# Define permissões dos certificados
+RUN chmod 600 /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
+    && chmod 644 /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem \
+    && chmod 600 /tmp/docker-mailserver/ssl/demoCA/cakey.pem \
+    && chmod 644 /tmp/docker-mailserver/ssl/demoCA/cacert.pem
+
 # Copia os arquivos de configuração
 COPY config/hostname.conf /etc/hostname
 COPY config/domainname.conf /etc/domainname
