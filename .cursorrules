@@ -1,0 +1,30 @@
+# Cursor Rules - Mailserver Project
+
+## Tarefas Realizadas
+- Criação da estrutura inicial do projeto
+- Configuração do docker-compose.yml
+- Configuração do ambiente com variáveis (.env.example)
+- Configuração do GitHub Actions para deploy
+- Criação dos arquivos de configuração do Postfix
+- Criação do script de setup
+
+## Problemas Encontrados
+- Nenhum problema encontrado durante a configuração inicial
+
+## Progresso Atual
+- Projeto base configurado e pronto para uso
+- Estrutura de diretórios e arquivos criada
+- Scripts de automação implementados
+
+## Próximos Passos
+1. Configurar o domínio no provedor DNS
+2. Configurar as variáveis de ambiente no arquivo .env
+3. Executar o setup inicial para criar a primeira conta de email
+4. Configurar o webhook no EasyPanel
+5. Realizar o primeiro deploy
+
+## Detalhes Relevantes
+- O projeto utiliza docker-mailserver como base
+- Todas as configurações sensíveis devem ser feitas através de variáveis de ambiente
+- Os arquivos de configuração do Postfix são populados automaticamente pelo script de setup
+- O deploy é automatizado através do GitHub Actions 

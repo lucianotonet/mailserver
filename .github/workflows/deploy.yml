@@ -1,0 +1,14 @@
+name: Deploy to EasyPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EasyPanel
+        run: |
+          curl -X POST ${{ secrets.EASYPANEL_WEBHOOK_URL }} 

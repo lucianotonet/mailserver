@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  mailserver:
+    image: docker-mailserver/docker-mailserver:latest
+    container_name: mailserver
+    hostname: ${MAIL_HOSTNAME}
+    ports:
+      - "25:25"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+    volumes:
+      - ./maildata:/var/mail
+      - ./mailstate:/var/mail-state
+      - ./maillogs:/var/log/mail
+      - ./config:/tmp/docker-mailserver
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - ENABLE_SPAMASSASSIN=${ENABLE_SPAMASSASSIN}
+      - ENABLE_CLAMAV=${ENABLE_CLAMAV}
+      - ENABLE_FAIL2BAN=${ENABLE_FAIL2BAN}
+      - ENABLE_POSTGREY=${ENABLE_POSTGREY}
+      - SSL_TYPE=${SSL_TYPE}
+      - TZ=${TZ}
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+    restart: always
+    networks:
+      - mailserver_network
+
+networks:
+  mailserver_network:
+    driver: bridge 

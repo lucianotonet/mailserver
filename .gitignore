@@ -1,0 +1,6 @@
+.env
+maildata/
+mailstate/
+maillogs/
+config/*
+!config/.gitkeep 
