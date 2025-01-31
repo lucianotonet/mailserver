@@ -2,9 +2,10 @@ version: "3.8"
 
 services:
   mailserver:
-    build:
-      context: ..
-      dockerfile: Dockerfile
+    image: mailserver/docker-mailserver:latest
+    container_name: mailserver
+    hostname: mail.tonet.dev
+    domainname: tonet.dev
     ports:
       - "25:25"
       - "465:465"
@@ -20,6 +21,10 @@ services:
       - TZ=America/Sao_Paulo
       - MAIL_DOMAIN=tonet.dev
       - MAIL_HOSTNAME=mail.tonet.dev
+      - HOSTNAME=mail.tonet.dev
+      - DOMAINNAME=tonet.dev
+      - DMS_HOSTNAME=mail.tonet.dev
+      - DMS_DOMAINNAME=tonet.dev
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
