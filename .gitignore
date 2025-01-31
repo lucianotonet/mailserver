@@ -5,8 +5,27 @@ logs/
 
 # Arquivos de ambiente
 .env
+.env.local
 
-maildata/
-mailstate/
-maillogs/
+# Diretórios de dados
+mail-data/
+mail-state/
+mail-logs/
+ssl/
+
+# Arquivos de configuração gerados
+config/postfix-accounts.cf
+config/postfix-virtual.cf
+
+# Logs e temporários
+*.log
+*.tmp
+*.pid
+
+# Certificados SSL
+*.pem
+*.key
+*.crt
+
+# Arquivos de configuração
 !config/.gitkeep 

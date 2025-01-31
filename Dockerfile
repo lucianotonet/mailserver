@@ -1,5 +1,5 @@
 # Use a imagem oficial do docker-mailserver como base
-FROM mailserver/docker-mailserver:latest
+FROM docker.io/mailserver/docker-mailserver:latest
 
 # Define variáveis de ambiente padrão
 ENV HOSTNAME=mail.tonet.dev \
@@ -64,6 +64,15 @@ VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserve
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Define o comando padrão
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Criar diretório de trabalho
+WORKDIR /app
+
+# Copiar script de inicialização
+COPY .easypanel/init.sh /app/init.sh
+
+# Definir permissões
+RUN chmod +x /app/init.sh
+
+# Manter o entrypoint original como base
+ENTRYPOINT ["/bin/sh", "-c", "/app/init.sh && /usr/local/bin/start-mailserver.sh"]
 CMD [] 

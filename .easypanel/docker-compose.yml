@@ -2,50 +2,58 @@ version: "3.8"
 
 services:
   mailserver:
-    image: mailserver/docker-mailserver:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
     container_name: mailserver
-    hostname: mail.tonet.dev
-    domainname: tonet.dev
+    hostname: ${HOSTNAME:-mail.tonet.dev}
+    domainname: ${DOMAINNAME:-tonet.dev}
     ports:
       - "25:25"
+      - "143:143"
       - "465:465"
       - "587:587"
       - "993:993"
     volumes:
-      - data:/var/mail
-      - state:/var/mail-state
-      - logs:/var/log/mail
-      - config:/tmp/docker-mailserver
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/easypanel/traefik/dump/mail.tonet.dev/certificate.crt:/etc/letsencrypt/live/mail.tonet.dev/fullchain.pem:ro
-      - /etc/easypanel/traefik/dump/mail.tonet.dev/privatekey.key:/etc/letsencrypt/live/mail.tonet.dev/privkey.pem:ro
+      - ${DATA_PATH:-../mail-data}:/var/mail
+      - ${STATE_PATH:-../mail-state}:/var/mail-state
+      - ${LOGS_PATH:-../mail-logs}:/var/log/mail
+      - ${CONFIG_PATH:-../config}:/tmp/docker-mailserver/
+      - ${SSL_PATH:-../ssl}/${DOMAINNAME:-tonet.dev}:/tmp/ssl/${DOMAINNAME:-tonet.dev}:ro
     environment:
-      - HOSTNAME=mail.tonet.dev
-      - DOMAINNAME=tonet.dev
-      - MAIL_DOMAIN=tonet.dev
-      - MAIL_HOSTNAME=mail.tonet.dev
-      - POSTMASTER_ADDRESS=postmaster@tonet.dev
-      - SSL_TYPE=letsencrypt
-      - LETSENCRYPT_DOMAIN=mail.tonet.dev
-      - TZ=America/Sao_Paulo
-      - DMS_DEBUG=1
       - ENABLE_SPAMASSASSIN=1
       - ENABLE_CLAMAV=1
       - ENABLE_FAIL2BAN=1
       - ENABLE_POSTGREY=1
+      - SSL_TYPE=manual
+      - SSL_CERT_PATH=/tmp/ssl/${DOMAINNAME:-tonet.dev}/fullchain.pem
+      - SSL_KEY_PATH=/tmp/ssl/${DOMAINNAME:-tonet.dev}/privkey.pem
+      - TZ=America/Sao_Paulo
+      - MAIL_DOMAIN=${DOMAINNAME:-tonet.dev}
+      - MAIL_HOSTNAME=${HOSTNAME:-mail.tonet.dev}
+      - PERMIT_DOCKER=host
       - ONE_DIR=1
-      - PERMIT_DOCKER=network
+      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
+      - POSTFIX_DAGENT=lmtp:dovecot:24
+      - REPORT_RECIPIENT=1
+      - DOVECOT_MAILBOX_FORMAT=maildir
       - POSTFIX_INET_PROTOCOLS=ipv4
       - DOVECOT_INET_PROTOCOLS=ipv4
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
-    restart: always
+    restart: unless-stopped
+    stop_grace_period: 1m
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "25"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
-      - easypanel
-    extra_hosts:
-      - "mail.tonet.dev:127.0.0.1"
-      - "tonet.dev:127.0.0.1"
+      - ${NETWORK:-default}
 
 volumes:
   data:
@@ -58,5 +66,7 @@ volumes:
     driver: local
 
 networks:
+  default:
+    driver: bridge
   easypanel:
     external: true 
