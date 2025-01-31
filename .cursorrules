@@ -7,24 +7,28 @@
 - Configuração do GitHub Actions para deploy
 - Criação dos arquivos de configuração do Postfix
 - Criação do script de setup
+- Criação do Dockerfile para deploy no EasyPanel
 
 ## Problemas Encontrados
-- Nenhum problema encontrado durante a configuração inicial
+- Erro no deploy inicial usando Nixpacks
+- Solução: Criação de Dockerfile personalizado para o projeto
 
 ## Progresso Atual
 - Projeto base configurado e pronto para uso
 - Estrutura de diretórios e arquivos criada
 - Scripts de automação implementados
+- Dockerfile criado para deploy no EasyPanel
 
 ## Próximos Passos
 1. Configurar o domínio no provedor DNS
 2. Configurar as variáveis de ambiente no arquivo .env
 3. Executar o setup inicial para criar a primeira conta de email
 4. Configurar o webhook no EasyPanel
-5. Realizar o primeiro deploy
+5. Realizar o primeiro deploy usando o Dockerfile
 
 ## Detalhes Relevantes
 - O projeto utiliza docker-mailserver como base
 - Todas as configurações sensíveis devem ser feitas através de variáveis de ambiente
 - Os arquivos de configuração do Postfix são populados automaticamente pelo script de setup
-- O deploy é automatizado através do GitHub Actions 
+- O deploy é automatizado através do GitHub Actions
+- O Dockerfile foi criado para substituir o Nixpacks no processo de deploy 
