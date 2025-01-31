@@ -1,5 +1,5 @@
 # Use a imagem oficial do docker-mailserver como base
-FROM docker-mailserver/docker-mailserver:latest
+FROM mailserver/docker-mailserver:latest
 
 # Define variáveis de ambiente padrão
 ENV TZ=America/Sao_Paulo \
