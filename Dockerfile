@@ -93,4 +93,4 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/start-mailserver.sh && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh"] 
