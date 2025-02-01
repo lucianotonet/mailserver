@@ -56,8 +56,6 @@ RUN mkdir -p /etc/ssl/docker-mailserver \
     && mkdir -p /tmp/docker-mailserver \
     && mkdir -p /var/lib/dovecot \
     && mkdir -p /etc/postfix \
-    && chown -R vmail:vmail /var/mail \
-    && chown -R vmail:vmail /var/lib/dovecot \
     && chmod -R 755 /var/mail \
     && chmod -R 755 /var/lib/dovecot
 
@@ -95,4 +93,4 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "chown -R vmail:vmail /var/mail && chown -R vmail:vmail /var/lib/dovecot && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
