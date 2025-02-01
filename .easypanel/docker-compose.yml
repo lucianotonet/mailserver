@@ -63,6 +63,19 @@ services:
     networks:
       - easypanel
 
+  roundcube:
+    image: roundcube/roundcubemail:1.6.9-apache
+    container_name: roundcube
+    depends_on:
+      - app
+    env_file:
+      - roundcube.env
+    volumes:
+      - roundcube_data:/var/www/html
+    networks:
+      - easypanel
+    restart: unless-stopped
+
 volumes:
   maildata:
     driver: local
@@ -73,6 +86,8 @@ volumes:
   mail-config:
     driver: local
   ssl-certs:
+    driver: local
+  roundcube_data:
     driver: local
 
 networks:
