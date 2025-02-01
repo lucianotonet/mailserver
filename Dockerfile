@@ -92,25 +92,5 @@ WORKDIR /app
 COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
-# Cria script de setup do vmail
-RUN echo '#!/bin/sh\n\
-# Remove grupo existente com GID 5000 se houver\n\
-EXISTING_GROUP=$(getent group 5000 | cut -d: -f1)\n\
-if [ ! -z "$EXISTING_GROUP" ]; then\n\
-    groupdel "$EXISTING_GROUP" || true\n\
-fi\n\
-# Cria grupo vmail\n\
-groupadd -g 5000 vmail || true\n\
-# Cria usuário vmail\n\
-useradd -g vmail -u 5000 vmail -d /var/mail -s /usr/sbin/nologin -M || true\n\
-# Configura permissões\n\
-chown -R vmail:vmail /var/mail\n\
-chown -R vmail:vmail /var/lib/dovecot\n\
-# Inicia serviços\n\
-supervisord -c /etc/supervisor/supervisord.conf\n\
-/app/init.sh\n\
-/usr/local/bin/start-mailserver.sh' > /app/setup-vmail.sh && \
-chmod +x /app/setup-vmail.sh
-
 # Define o entrypoint
-ENTRYPOINT ["/app/setup-vmail.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "chown -R vmail:vmail /var/mail && chown -R vmail:vmail /var/lib/dovecot && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
