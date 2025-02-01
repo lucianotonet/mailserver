@@ -1,9 +1,9 @@
 # Cursor Rules - Mailserver Project
 
 ## Tarefas Realizadas
-- Criação da estrutura inicial do projeto
+- Configuração inicial do projeto
 - Configuração do docker-compose.yml
-- Configuração do ambiente com variáveis (.env.example)
+- Configuração do ambiente com variáveis (.env)
 - Configuração do GitHub Actions para deploy
 - Configuração do Postfix e Dovecot
 - Organização e limpeza dos scripts de configuração
@@ -13,7 +13,9 @@
 - Implementação de geração automática de certificados SSL
 - Ajuste do docker-compose.yml para EasyPanel
 - Otimização do Dockerfile para deploy
-- Correção do nome do serviço para 'app' no EasyPanel
+- Configuração de volumes persistentes para dados do mailserver
+- Correção das permissões de diretórios
+- Configuração do volume maildata para persistência
 
 ## Scripts do Projeto
 1. setup.sh: Script principal de configuração
@@ -42,16 +44,18 @@
    - Inicialização do mailserver
    - Geração de certificados de emergência
 
-## Problemas Encontrados
-- Erro no deploy inicial usando Nixpacks
-- Erro fatal de hostname/domainname não configurado
-- Problemas com certificados SSL
+## Problemas Encontrados e Resolvidos
+- Erro no deploy inicial usando Nixpacks (resolvido)
+- Erro fatal de hostname/domainname não configurado (resolvido)
+- Problemas com certificados SSL (resolvido)
 - Duplicidade de scripts de configuração (resolvido)
 - Configuração de hostname/domainname inconsistente (resolvido)
 - Path de certificados SSL incorreto (resolvido)
 - Necessidade de automatização da configuração local (resolvido)
 - Erro no EasyPanel com nome da imagem incorreto (resolvido)
 - Ajuste necessário no docker-compose.yml para EasyPanel (resolvido)
+- Perda de dados após rebuild (resolvido com volumes persistentes)
+- Problemas de permissão em diretórios (resolvido)
 
 ## Progresso Atual
 - Scripts organizados e otimizados
@@ -62,6 +66,8 @@
 - Processo de deploy documentado
 - Docker-compose.yml ajustado para EasyPanel
 - Dockerfile otimizado para deploy
+- Volumes persistentes configurados
+- Permissões de diretórios corrigidas
 
 ## Próximos Passos
 1. Fazer commit das alterações
@@ -80,4 +86,6 @@
 - Processo de deploy automatizado via EasyPanel
 - Certificados SSL gerados localmente e no container
 - Nome do serviço alterado para 'app' no EasyPanel
-- Volumes e networks configurados corretamente 
+- Volumes e networks configurados corretamente
+- Dados persistentes configurados com volume maildata
+- Permissões de diretórios ajustadas para vmail:vmail 

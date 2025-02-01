@@ -131,6 +131,65 @@ docker exec mailserver setup email del usuario@seudominio.com
 - Autenticação: Normal Password
 - Usuário: email completo
 
+## Configuração do Webmail (Roundcube)
+
+### Deploy via EasyPanel
+
+1. No EasyPanel, acesse a seção "Services"
+2. Clique em "Create Service"
+3. Selecione "Roundcube" no catálogo
+4. Configure os seguintes campos:
+   - App Service Name: roundcube
+   - App Service Image: roundcube/roundcubemail:1.6.9-apache
+   - Default Host: mail.tonet.dev
+   - Default Port: 143
+   - SMTP Server: mail.tonet.dev
+   - SMTP Port: 587
+   - Plugins: archive,zipdownload
+   - Upload Max File Size: 5M
+
+5. Clique em "Create" para iniciar o deploy
+
+### Acesso ao Webmail
+
+1. Após o deploy, o Roundcube estará disponível em:
+   ```
+   https://roundcube.tonet.dev
+   ```
+
+2. Use suas credenciais de email para fazer login:
+   - Usuário: seu_email@tonet.dev
+   - Senha: sua_senha_de_email
+
+### Configurações de Segurança
+
+1. O Roundcube já está configurado para usar SSL/TLS
+2. As conexões IMAP e SMTP são criptografadas
+3. O limite de upload está definido em 5MB por padrão
+4. Os plugins básicos estão habilitados:
+   - archive: para arquivamento de mensagens
+   - zipdownload: para download em lote
+
+### Troubleshooting
+
+Se encontrar problemas de conexão:
+
+1. Verifique se o servidor de email está online:
+   ```bash
+   docker exec mailserver supervisorctl status
+   ```
+
+2. Teste as portas IMAP e SMTP:
+   ```bash
+   telnet mail.tonet.dev 143
+   telnet mail.tonet.dev 587
+   ```
+
+3. Verifique os logs do Roundcube:
+   ```bash
+   docker logs roundcube
+   ```
+
 ## Deploy no EasyPanel
 
 1. Adicione as variáveis de ambiente no EasyPanel (copie do seu .env local)

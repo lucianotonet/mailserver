@@ -52,7 +52,14 @@ RUN mkdir -p /etc/ssl/docker-mailserver \
     && mkdir -p /var/mail \
     && mkdir -p /var/mail-state \
     && mkdir -p /var/log/mail \
-    && mkdir -p /dev/shm
+    && mkdir -p /dev/shm \
+    && mkdir -p /tmp/docker-mailserver \
+    && mkdir -p /var/lib/dovecot \
+    && mkdir -p /etc/postfix \
+    && chown -R vmail:vmail /var/mail \
+    && chown -R vmail:vmail /var/lib/dovecot \
+    && chmod -R 755 /var/mail \
+    && chmod -R 755 /var/lib/dovecot
 
 # Gera certificados SSL temporários para desenvolvimento
 RUN openssl genrsa -out /etc/ssl/docker-mailserver/key.pem 4096 \
@@ -78,7 +85,7 @@ RUN chmod +x /setup.sh \
 EXPOSE 25 465 587 993
 
 # Define volumes
-VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver", "/var/log/supervisor" ]
+VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver", "/var/log/supervisor", "/var/lib/dovecot", "/etc/postfix" ]
 
 # Define o diretório de trabalho
 WORKDIR /app

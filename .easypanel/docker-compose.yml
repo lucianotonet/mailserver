@@ -16,7 +16,10 @@ services:
       - "587:587"
       - "993:993"
     volumes:
-      - mail-data:/var/mail
+      - maildata:/tmp/docker-mailserver
+      - maildata:/var/mail
+      - maildata:/var/lib/dovecot
+      - maildata:/etc/postfix
       - mail-state:/var/mail-state
       - mail-logs:/var/log/mail
       - mail-config:/tmp/docker-mailserver
@@ -61,7 +64,7 @@ services:
       - easypanel
 
 volumes:
-  mail-data:
+  maildata:
     driver: local
   mail-state:
     driver: local
