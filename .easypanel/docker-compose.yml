@@ -62,7 +62,6 @@ services:
       - 1.1.1.1
     networks:
       - easypanel
-      - mailnet
 
   roundcube:
     image: roundcube/roundcubemail:1.6.9-apache
@@ -75,7 +74,6 @@ services:
       - roundcube_data:/var/www/html
     networks:
       - easypanel
-      - mailnet
     restart: unless-stopped
 
 volumes:
@@ -94,6 +92,4 @@ volumes:
 
 networks:
   easypanel:
-    external: true
-  mailnet:
-    driver: bridge 
+    external: true 
