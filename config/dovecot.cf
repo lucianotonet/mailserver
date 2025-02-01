@@ -1,0 +1,28 @@
+# Dovecot configuration
+# Allow plaintext authentication without SSL
+disable_plaintext_auth = no
+
+# SSL settings
+ssl = yes
+ssl_cert = </etc/ssl/docker-mailserver/cert.pem
+ssl_key = </etc/ssl/docker-mailserver/key.pem
+
+# Authentication settings
+auth_mechanisms = plain login
+auth_username_format = %n
+
+# Mail location
+mail_location = maildir:/var/mail/%d/%n
+
+# Mailbox settings
+namespace inbox {
+  inbox = yes
+}
+
+# Protocol settings
+protocols = imap pop3 lmtp
+
+# Logging
+log_path = /var/log/dovecot.log
+info_log_path = /var/log/dovecot-info.log
+debug_log_path = /var/log/dovecot-debug.log 
