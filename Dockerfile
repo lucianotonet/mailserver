@@ -93,4 +93,4 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "groupadd -g 5000 vmail || true && useradd -g vmail -u 5000 vmail -d /var/mail -s /usr/sbin/nologin -M || true && chown -R vmail:vmail /var/mail && chown -R vmail:vmail /var/lib/dovecot && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
