@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/l
 RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA \
     && mkdir -p /var/mail \
     && mkdir -p /var/mail-state \
-    && mkdir -p /var/log/mail
+    && mkdir -p /var/log/mail \
+    && mkdir -p /etc/letsencrypt/live/tonet.dev
 
 # Gera certificados SSL temporários para desenvolvimento
 RUN openssl genrsa -out /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem 4096 \
@@ -48,7 +49,9 @@ RUN openssl genrsa -out /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem 4096 \
     && chmod 600 /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
     && chmod 644 /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem \
     && chmod 600 /tmp/docker-mailserver/ssl/demoCA/cakey.pem \
-    && chmod 644 /tmp/docker-mailserver/ssl/demoCA/cacert.pem
+    && chmod 644 /tmp/docker-mailserver/ssl/demoCA/cacert.pem \
+    && ln -sf /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem /etc/letsencrypt/live/tonet.dev/privkey.pem \
+    && ln -sf /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem /etc/letsencrypt/live/tonet.dev/fullchain.pem
 
 # Copia os arquivos de configuração
 COPY config/ /tmp/docker-mailserver/

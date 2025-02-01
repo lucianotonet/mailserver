@@ -20,7 +20,8 @@ services:
       - ${STATE_PATH:-../mail-state}:/var/mail-state
       - ${LOGS_PATH:-../mail-logs}:/var/log/mail
       - ${CONFIG_PATH:-../config}:/tmp/docker-mailserver/
-      - /tmp/docker-mailserver/ssl:/tmp/docker-mailserver/ssl
+      - /tmp/docker-mailserver/ssl:/tmp/docker-mailserver/ssl:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - ENABLE_SPAMASSASSIN=1
       - ENABLE_CLAMAV=1
@@ -29,6 +30,9 @@ services:
       - SSL_TYPE=manual
       - SSL_CERT_PATH=/tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem
       - SSL_KEY_PATH=/tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem
+      - DMS_SSL_CERT_PATH=/tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem
+      - DMS_SSL_KEY_PATH=/tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem
+      - SSL_CERT_DIR=/tmp/docker-mailserver/ssl
       - TZ=America/Sao_Paulo
       - MAIL_DOMAIN=${DOMAINNAME:-tonet.dev}
       - MAIL_HOSTNAME=${HOSTNAME:-mail.tonet.dev}
