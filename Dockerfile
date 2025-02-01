@@ -59,6 +59,36 @@ RUN mkdir -p /etc/ssl/docker-mailserver \
     && chmod -R 755 /var/mail \
     && chmod -R 755 /var/lib/dovecot
 
+# Configura o Postfix
+RUN echo "# Basic Postfix Configuration\n\
+myhostname = mail.tonet.dev\n\
+mydomain = tonet.dev\n\
+myorigin = \$mydomain\n\
+inet_interfaces = all\n\
+inet_protocols = ipv4\n\
+mydestination = \$myhostname, localhost.\$mydomain, localhost, \$mydomain\n\
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 10.0.0.0/8\n\
+smtpd_banner = \$myhostname ESMTP\n\
+biff = no\n\
+append_dot_mydomain = no\n\
+readme_directory = no\n\
+compatibility_level = 2\n\
+smtpd_tls_cert_file=/etc/ssl/docker-mailserver/cert.pem\n\
+smtpd_tls_key_file=/etc/ssl/docker-mailserver/key.pem\n\
+smtpd_use_tls=yes\n\
+smtpd_tls_auth_only = yes\n\
+smtp_tls_security_level = may\n\
+smtpd_tls_security_level = may\n\
+smtpd_sasl_auth_enable = yes\n\
+smtpd_sasl_type = dovecot\n\
+smtpd_sasl_path = private/auth\n\
+smtpd_sasl_security_options = noanonymous\n\
+smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination\n\
+virtual_transport = lmtp:unix:private/dovecot-lmtp\n\
+virtual_mailbox_domains = \$mydomain\n\
+virtual_mailbox_maps = hash:/etc/postfix/vmaps\n\
+virtual_alias_maps = hash:/etc/postfix/virtual\n" > /etc/postfix/main.cf
+
 # Gera certificados SSL temporários para desenvolvimento
 RUN openssl genrsa -out /etc/ssl/docker-mailserver/key.pem 4096 \
     && openssl req -new -x509 \
@@ -93,4 +123,4 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/start-mailserver.sh && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
