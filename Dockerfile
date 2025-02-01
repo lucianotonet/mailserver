@@ -92,8 +92,5 @@ WORKDIR /app
 COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
-# Cria o usuário e grupo vmail
-RUN groupadd -g 5000 vmail && useradd -g vmail -u 5000 vmail -d /var/mail -s /usr/sbin/nologin -M
-
 # Define o entrypoint
 ENTRYPOINT ["/bin/sh", "-c", "chown -R vmail:vmail /var/mail && chown -R vmail:vmail /var/lib/dovecot && supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
