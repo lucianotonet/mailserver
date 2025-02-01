@@ -9,12 +9,18 @@
 - Organização e limpeza dos scripts de configuração
 - Melhorias na configuração SSL
 - Adicionado suporte a verificação DNS completa
+- Atualização do script setup.sh para configuração local
+- Implementação de geração automática de certificados SSL
+- Ajuste do docker-compose.yml para EasyPanel
+- Otimização do Dockerfile para deploy
+- Correção do nome do serviço para 'app' no EasyPanel
 
 ## Scripts do Projeto
 1. setup.sh: Script principal de configuração
-   - Configuração inicial do ambiente
-   - Gerenciamento de contas de email
-   - Orquestração de outros scripts
+   - Configuração inicial do ambiente local
+   - Geração de certificados SSL iniciais
+   - Criação da estrutura de diretórios
+   - Preparação para deploy
 
 2. ssl-setup.sh: Gerenciamento de SSL
    - Geração de certificados auto-assinados
@@ -34,6 +40,7 @@
 5. entrypoint.sh: Script de Inicialização
    - Debug de hostname/domainname
    - Inicialização do mailserver
+   - Geração de certificados de emergência
 
 ## Problemas Encontrados
 - Erro no deploy inicial usando Nixpacks
@@ -42,24 +49,35 @@
 - Duplicidade de scripts de configuração (resolvido)
 - Configuração de hostname/domainname inconsistente (resolvido)
 - Path de certificados SSL incorreto (resolvido)
+- Necessidade de automatização da configuração local (resolvido)
+- Erro no EasyPanel com nome da imagem incorreto (resolvido)
+- Ajuste necessário no docker-compose.yml para EasyPanel (resolvido)
 
 ## Progresso Atual
 - Scripts organizados e otimizados
 - Estrutura de diretórios e arquivos limpa
 - Configuração SSL melhorada
 - Sistema de verificação DNS robusto
+- Setup local automatizado
+- Processo de deploy documentado
+- Docker-compose.yml ajustado para EasyPanel
+- Dockerfile otimizado para deploy
 
 ## Próximos Passos
-1. Configurar o domínio no provedor DNS
-2. Executar verificacao-dns.sh para validar configuração
-3. Gerar certificados SSL usando ssl-setup.sh
-4. Configurar a primeira conta de email com setup.sh
-5. Validar configurações com check-config.sh
-6. Testar fluxo de emails com ferramentas como swaks
-7. Configurar backup automático dos certificados
+1. Fazer commit das alterações
+2. Push para o repositório para deploy automático
+3. Verificar status do deploy no EasyPanel
+4. Validar configurações com check-config.sh
+5. Configurar o domínio no provedor DNS
+6. Executar verificacao-dns.sh para validar configuração
+7. Testar fluxo de emails com ferramentas como swaks
 
 ## Detalhes Relevantes
 - Todos os scripts foram revisados e otimizados
 - Removidos scripts redundantes
 - Padronização de nomes sem acentos
-- Melhor organização da documentação 
+- Melhor organização da documentação
+- Processo de deploy automatizado via EasyPanel
+- Certificados SSL gerados localmente e no container
+- Nome do serviço alterado para 'app' no EasyPanel
+- Volumes e networks configurados corretamente 

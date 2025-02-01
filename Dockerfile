@@ -26,9 +26,14 @@ ENV HOSTNAME=mail.tonet.dev \
 # Instala o netcat para healthcheck
 RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
-# Gera certificados SSL
+# Cria diretórios necessários
 RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA \
-    && openssl genrsa -out /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem 4096 \
+    && mkdir -p /var/mail \
+    && mkdir -p /var/mail-state \
+    && mkdir -p /var/log/mail
+
+# Gera certificados SSL temporários para desenvolvimento
+RUN openssl genrsa -out /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem 4096 \
     && openssl req -new -x509 \
         -key /tmp/docker-mailserver/ssl/mail.tonet.dev-key.pem \
         -out /tmp/docker-mailserver/ssl/mail.tonet.dev-cert.pem \
@@ -46,33 +51,26 @@ RUN mkdir -p /tmp/docker-mailserver/ssl/demoCA \
     && chmod 644 /tmp/docker-mailserver/ssl/demoCA/cacert.pem
 
 # Copia os arquivos de configuração
-COPY config/hostname.conf /etc/hostname
-COPY config/domainname.conf /etc/domainname
 COPY config/ /tmp/docker-mailserver/
 COPY setup.sh /
+COPY entrypoint.sh /usr/local/bin/
 
-# Dá permissão de execução ao script de setup
-RUN chmod +x /setup.sh
+# Define permissões
+RUN chmod +x /setup.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 # Expõe as portas necessárias
 EXPOSE 25 465 587 993
 
-# Define o volume para persistência dos dados
+# Define volumes
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver" ]
 
-# Copia o script de inicialização
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Criar diretório de trabalho
+# Define o diretório de trabalho
 WORKDIR /app
 
-# Copiar script de inicialização
+# Copia o script de inicialização do EasyPanel
 COPY .easypanel/init.sh /app/init.sh
-
-# Definir permissões
 RUN chmod +x /app/init.sh
 
-# Manter o entrypoint original como base
-ENTRYPOINT ["/bin/sh", "-c", "/app/init.sh && /usr/local/bin/start-mailserver.sh"]
-CMD [] 
+# Define o entrypoint
+ENTRYPOINT ["/bin/sh", "-c", "/app/init.sh && /usr/local/bin/start-mailserver.sh"] 

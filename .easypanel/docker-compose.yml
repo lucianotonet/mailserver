@@ -1,10 +1,11 @@
 version: "3.8"
 
 services:
-  mailserver:
+  app:
     build:
       context: ..
       dockerfile: Dockerfile
+    image: ${IMAGE_NAME}
     container_name: mailserver
     hostname: ${HOSTNAME:-mail.tonet.dev}
     domainname: ${DOMAINNAME:-tonet.dev}
@@ -53,7 +54,7 @@ services:
       - 8.8.8.8
       - 1.1.1.1
     networks:
-      - ${NETWORK:-default}
+      - easypanel
 
 volumes:
   data:
@@ -66,7 +67,5 @@ volumes:
     driver: local
 
 networks:
-  default:
-    driver: bridge
   easypanel:
     external: true 
