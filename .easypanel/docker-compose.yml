@@ -68,6 +68,8 @@ services:
     container_name: roundcube
     depends_on:
       - app
+    links:
+      - app:mail.tonet.dev
     env_file:
       - roundcube.env
     volumes:
