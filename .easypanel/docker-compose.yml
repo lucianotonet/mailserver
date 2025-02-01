@@ -62,20 +62,20 @@ services:
       - 1.1.1.1
     networks:
       - easypanel
+      - mailnet
 
   roundcube:
     image: roundcube/roundcubemail:1.6.9-apache
     container_name: roundcube
     depends_on:
       - app
-    links:
-      - app:mail.tonet.dev
     env_file:
       - roundcube.env
     volumes:
       - roundcube_data:/var/www/html
     networks:
       - easypanel
+      - mailnet
     restart: unless-stopped
 
 volumes:
@@ -94,4 +94,6 @@ volumes:
 
 networks:
   easypanel:
-    external: true 
+    external: true
+  mailnet:
+    driver: bridge 
