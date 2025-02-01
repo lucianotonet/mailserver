@@ -23,14 +23,36 @@ ENV HOSTNAME=mail.tonet.dev \
     DMS_HOSTNAME=mail.tonet.dev \
     DMS_DOMAINNAME=tonet.dev
 
-# Instala o netcat para healthcheck
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+# Instala pacotes necessários
+RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
+    supervisor \
+    cron \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configura o supervisor
+RUN mkdir -p /var/log/supervisor \
+    && mkdir -p /etc/supervisor/conf.d \
+    && echo "[supervisord]" > /etc/supervisor/supervisord.conf \
+    && echo "nodaemon=true" >> /etc/supervisor/supervisord.conf \
+    && echo "user=root" >> /etc/supervisor/supervisord.conf \
+    && echo "logfile=/var/log/supervisor/supervisord.log" >> /etc/supervisor/supervisord.conf \
+    && echo "childlogdir=/var/log/supervisor" >> /etc/supervisor/supervisord.conf \
+    && echo "[unix_http_server]" >> /etc/supervisor/supervisord.conf \
+    && echo "file=/dev/shm/supervisor.sock" >> /etc/supervisor/supervisord.conf \
+    && echo "[rpcinterface:supervisor]" >> /etc/supervisor/supervisord.conf \
+    && echo "supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface" >> /etc/supervisor/supervisord.conf \
+    && echo "[supervisorctl]" >> /etc/supervisor/supervisord.conf \
+    && echo "serverurl=unix:///dev/shm/supervisor.sock" >> /etc/supervisor/supervisord.conf \
+    && echo "[include]" >> /etc/supervisor/supervisord.conf \
+    && echo "files = /etc/supervisor/conf.d/*.conf" >> /etc/supervisor/supervisord.conf
 
 # Cria diretórios necessários
 RUN mkdir -p /etc/ssl/docker-mailserver \
     && mkdir -p /var/mail \
     && mkdir -p /var/mail-state \
-    && mkdir -p /var/log/mail
+    && mkdir -p /var/log/mail \
+    && mkdir -p /dev/shm
 
 # Gera certificados SSL temporários para desenvolvimento
 RUN openssl genrsa -out /etc/ssl/docker-mailserver/key.pem 4096 \
@@ -49,13 +71,14 @@ COPY entrypoint.sh /usr/local/bin/
 
 # Define permissões
 RUN chmod +x /setup.sh \
-    && chmod +x /usr/local/bin/entrypoint.sh
+    && chmod +x /usr/local/bin/entrypoint.sh \
+    && chmod 777 /dev/shm
 
 # Expõe as portas necessárias
 EXPOSE 25 465 587 993
 
 # Define volumes
-VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver" ]
+VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver", "/var/log/supervisor" ]
 
 # Define o diretório de trabalho
 WORKDIR /app
@@ -65,4 +88,4 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "/app/init.sh && /usr/local/bin/start-mailserver.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
