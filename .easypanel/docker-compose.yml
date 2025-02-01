@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     image: ${IMAGE_NAME}
     container_name: mailserver
-    hostname: ${HOSTNAME:-mail.tonet.dev}
-    domainname: ${DOMAINNAME:-tonet.dev}
+    hostname: ${HOSTNAME}
+    domainname: ${DOMAINNAME}
     ports:
       - "25:25"
       - "143:143"
@@ -16,30 +16,34 @@ services:
       - "587:587"
       - "993:993"
     volumes:
-      - ${DATA_PATH:-../mail-data}:/var/mail
-      - ${STATE_PATH:-../mail-state}:/var/mail-state
-      - ${LOGS_PATH:-../mail-logs}:/var/log/mail
-      - ${CONFIG_PATH:-../config}:/tmp/docker-mailserver/
+      - mail-data:/var/mail
+      - mail-state:/var/mail-state
+      - mail-logs:/var/log/mail
+      - mail-config:/tmp/docker-mailserver
       - ssl-certs:/etc/ssl/docker-mailserver
     environment:
-      - ENABLE_SPAMASSASSIN=1
-      - ENABLE_CLAMAV=1
-      - ENABLE_FAIL2BAN=1
-      - ENABLE_POSTGREY=1
-      - SSL_TYPE=manual
-      - SSL_CERT_PATH=/etc/ssl/docker-mailserver/cert.pem
-      - SSL_KEY_PATH=/etc/ssl/docker-mailserver/key.pem
-      - TZ=America/Sao_Paulo
-      - MAIL_DOMAIN=${DOMAINNAME:-tonet.dev}
-      - MAIL_HOSTNAME=${HOSTNAME:-mail.tonet.dev}
-      - PERMIT_DOCKER=host
-      - ONE_DIR=1
-      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT=1
-      - POSTFIX_DAGENT=lmtp:dovecot:24
-      - REPORT_RECIPIENT=1
-      - DOVECOT_MAILBOX_FORMAT=maildir
-      - POSTFIX_INET_PROTOCOLS=ipv4
-      - DOVECOT_INET_PROTOCOLS=ipv4
+      - SSL_TYPE
+      - SSL_CERT_PATH
+      - SSL_KEY_PATH
+      - HOSTNAME
+      - DOMAINNAME
+      - MAIL_DOMAIN
+      - MAIL_HOSTNAME
+      - POSTMASTER_ADDRESS
+      - TZ
+      - ENABLE_SPAMASSASSIN
+      - ENABLE_CLAMAV
+      - ENABLE_FAIL2BAN
+      - ENABLE_POSTGREY
+      - ONE_DIR
+      - PERMIT_DOCKER
+      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT
+      - POSTFIX_DAGENT
+      - REPORT_RECIPIENT
+      - DOVECOT_MAILBOX_FORMAT
+      - POSTFIX_INET_PROTOCOLS
+      - DOVECOT_INET_PROTOCOLS
+      - DMS_DEBUG
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
@@ -57,6 +61,14 @@ services:
       - easypanel
 
 volumes:
+  mail-data:
+    driver: local
+  mail-state:
+    driver: local
+  mail-logs:
+    driver: local
+  mail-config:
+    driver: local
   ssl-certs:
     driver: local
 
