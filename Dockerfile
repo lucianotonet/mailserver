@@ -21,7 +21,9 @@ ENV HOSTNAME=mail.tonet.dev \
     DOVECOT_INET_PROTOCOLS=ipv4 \
     OVERRIDE_HOSTNAME=mail.tonet.dev \
     DMS_HOSTNAME=mail.tonet.dev \
-    DMS_DOMAINNAME=tonet.dev
+    DMS_DOMAINNAME=tonet.dev \
+    DOCKER_BIND_PORTS="25,465,587,993" \
+    DOCKER_HOST_IP="0.0.0.0"
 
 # Instala pacotes necessários
 RUN apt-get update && apt-get install -y \
@@ -82,6 +84,27 @@ RUN chmod +x /setup.sh \
 # Expõe as portas necessárias
 EXPOSE 25/tcp 465/tcp 587/tcp 993/tcp
 
+# Adicione um LABEL para informar ao EasyPanel sobre as portas
+LABEL easypanel.ports="25:25/tcp,465:465/tcp,587:587/tcp,993:993/tcp"
+LABEL org.opencontainers.image.expose='["25/tcp", "465/tcp", "587/tcp", "993/tcp"]'
+LABEL traefik.enable="true"
+LABEL traefik.tcp.routers.mail-smtp.rule="HostSNI(`*`)"
+LABEL traefik.tcp.routers.mail-smtp.entrypoints="smtp"
+LABEL traefik.tcp.routers.mail-smtp.service="mail-smtp"
+LABEL traefik.tcp.services.mail-smtp.loadbalancer.server.port="25"
+LABEL traefik.tcp.routers.mail-submission.rule="HostSNI(`*`)"
+LABEL traefik.tcp.routers.mail-submission.entrypoints="submission"
+LABEL traefik.tcp.routers.mail-submission.service="mail-submission"
+LABEL traefik.tcp.services.mail-submission.loadbalancer.server.port="587"
+LABEL traefik.tcp.routers.mail-imaps.rule="HostSNI(`*`)"
+LABEL traefik.tcp.routers.mail-imaps.entrypoints="imaps"
+LABEL traefik.tcp.routers.mail-imaps.service="mail-imaps"
+LABEL traefik.tcp.services.mail-imaps.loadbalancer.server.port="993"
+LABEL traefik.tcp.routers.mail-smtps.rule="HostSNI(`*`)"
+LABEL traefik.tcp.routers.mail-smtps.entrypoints="smtps"
+LABEL traefik.tcp.routers.mail-smtps.service="mail-smtps"
+LABEL traefik.tcp.services.mail-smtps.loadbalancer.server.port="465"
+
 # Define volumes
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver", "/var/log/supervisor", "/var/lib/dovecot", "/etc/postfix" ]
 
@@ -94,6 +117,3 @@ RUN chmod +x /app/init.sh
 
 # Define o entrypoint
 ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"]
-
-# Adicione um LABEL para informar ao EasyPanel sobre as portas
-LABEL easypanel.ports="25:25/tcp,465:465/tcp,587:587/tcp,993:993/tcp" 
