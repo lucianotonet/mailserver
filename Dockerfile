@@ -80,7 +80,7 @@ RUN chmod +x /setup.sh \
     && chmod 777 /dev/shm
 
 # Expõe as portas necessárias
-EXPOSE 25 465 587 993
+EXPOSE 25/tcp 465/tcp 587/tcp 993/tcp
 
 # Define volumes
 VOLUME [ "/var/mail", "/var/mail-state", "/var/log/mail", "/tmp/docker-mailserver", "/etc/ssl/docker-mailserver", "/var/log/supervisor", "/var/lib/dovecot", "/etc/postfix" ]
@@ -93,4 +93,7 @@ COPY .easypanel/init.sh /app/init.sh
 RUN chmod +x /app/init.sh
 
 # Define o entrypoint
-ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"] 
+ENTRYPOINT ["/bin/sh", "-c", "supervisord -c /etc/supervisor/supervisord.conf && /app/init.sh && /usr/local/bin/start-mailserver.sh"]
+
+# Adicione um LABEL para informar ao EasyPanel sobre as portas
+LABEL easypanel.ports="25:25/tcp,465:465/tcp,587:587/tcp,993:993/tcp" 
