@@ -10,7 +10,7 @@
 
 ### Portas e Protocolos
 - SMTP: 25 (sem SSL), 465 (SSL), 587 (TLS)
-- IMAP: 143 (sem SSL), 993 (SSL)
+- IMAP: 143 (sem SSL, disponível para compatibilidade), 993 (SSL, recomendado)
 - POP3: 110 (sem SSL), 995 (SSL)
 
 ### Domínios e Hostnames
@@ -63,11 +63,15 @@
 - Arquivo de configuração em `config/dovecot.cf`
 - Configurações críticas:
   ```
-  disable_plaintext_auth = no  # Temporariamente para debug
-  ssl = yes
+  disable_plaintext_auth = no  # Permite autenticação sem SSL (porta 143)
+  ssl = yes                    # Habilita SSL mas não força seu uso
   auth_mechanisms = plain login
   mail_location = maildir:/var/mail/%d/%n
+  listen = *                   # Escuta em todas as interfaces
   ```
+- Portas IMAP:
+  - 143: Disponível para compatibilidade (sem SSL)
+  - 993: Recomendada para uso geral (SSL)
 
 ### 5. Postfix
 - Arquivo principal em `/etc/postfix/main.cf`
@@ -93,6 +97,7 @@
 ### 1. Erro "SSL required for authentication"
 - Solução temporária: `disable_plaintext_auth = no` no Dovecot
 - Solução permanente: Configurar SSL corretamente
+- Alternativa: Usar porta 143 para clientes que não suportam SSL
 
 ### 2. Erro de conexão Roundcube
 - Usar nome do serviço EasyPanel (com hífen)
@@ -103,6 +108,14 @@
 - Usar volume `maildata` compartilhado
 - Manter permissões consistentes
 - Não tentar gerenciar usuário vmail
+
+### 4. Problemas de Conexão IMAP
+- Verificar se a porta está aberta (143 ou 993)
+- Confirmar configurações do cliente
+- Para porta 143:
+  - Verificar se `disable_plaintext_auth = no`
+  - Confirmar que `listen = *` está configurado
+  - Testar com `telnet mail.tonet.dev 143`
 
 ## Fluxo de Trabalho Ideal
 
@@ -120,8 +133,10 @@
 
 3. **Teste de Conexão**
    ```bash
-   telnet mail.tonet.dev 25
+   # Teste IMAP sem SSL
    telnet mail.tonet.dev 143
+   # Teste IMAP com SSL
+   openssl s_client -connect mail.tonet.dev:993
    ```
 
 4. **Monitoramento**
@@ -137,6 +152,7 @@
 3. Ajustar políticas de spam
 4. Implementar backup automatizado
 5. Configurar monitoramento
+6. Considerar desativar porta 143 após migração de todos os clientes para SSL
 
 ## Referências Úteis
 - [Docker Mailserver Docs](https://docker-mailserver.github.io/docker-mailserver/edge/)
