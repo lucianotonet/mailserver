@@ -14,6 +14,7 @@ services:
       - "465:465"  # SMTP sobre SSL (envio seguro legado)
       - "587:587"  # SMTP com STARTTLS (envio seguro moderno)
       - "993:993"  # IMAP sobre SSL (leitura segura)
+      - "143:143"  # IMAP sem SSL
     volumes:
       - maildata:/tmp/docker-mailserver
       - maildata:/var/mail
