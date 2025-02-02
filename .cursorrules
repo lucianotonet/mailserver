@@ -1,5 +1,39 @@
 # Cursor Rules - Mailserver Project
 
+## Estrutura do EasyPanel
+- Diretório base: `/etc/easypanel/projects/tonetdev/mailserver`
+- Container ID padrão: buscar com `docker ps -a | grep mail`
+- Nome do container: `tonetdev_mailserver.1.{hash}`
+- Imagem: `easypanel/tonetdev/mailserver:latest`
+- Volumes persistentes em: `/etc/easypanel/projects/tonetdev/mailserver/volumes`
+
+## Comandos Úteis no Servidor
+1. **Verificação de Status:**
+   ```bash
+   docker ps -a | grep mail
+   docker exec [CONTAINER_ID] setup email list
+   docker logs [CONTAINER_ID] --tail 100
+   ```
+
+2. **Gerenciamento de Emails:**
+   ```bash
+   docker exec [CONTAINER_ID] setup email add [EMAIL] [PASSWORD]
+   docker exec [CONTAINER_ID] setup email list
+   docker exec [CONTAINER_ID] setup email del [EMAIL]
+   ```
+
+3. **Verificação de Logs:**
+   ```bash
+   docker logs [CONTAINER_ID] --tail 100
+   docker exec [CONTAINER_ID] cat /var/log/mail/mail.log
+   ```
+
+## Portas e Serviços
+- SMTP (25): Recebimento de emails
+- SMTP-SSL (465): Envio seguro legado
+- SMTP-TLS (587): Envio seguro moderno
+- IMAP-SSL (993): Leitura segura
+
 ## Tarefas Realizadas
 - Configuração inicial do projeto
 - Configuração do docker-compose.yml
@@ -59,6 +93,7 @@
 - Perda de dados após rebuild (resolvido com volumes persistentes)
 - Problemas de permissão em diretórios (resolvido)
 - Complexidade desnecessária com Roundcube (resolvido - removido)
+- Erro de arquivo main.cf não encontrado (investigar na próxima sessão)
 
 ## Progresso Atual
 - Scripts organizados e otimizados
@@ -75,14 +110,14 @@
 - Guia de configuração para clientes externos criado
 
 ## Próximos Passos
-1. Fazer commit das alterações
-2. Push para o repositório para deploy automático
-3. Verificar status do deploy no EasyPanel
-4. Validar configurações com check-config.sh
-5. Configurar o domínio no provedor DNS
-6. Executar verificacao-dns.sh para validar configuração
-7. Testar conexões com clientes externos
-8. Validar certificados SSL em produção
+1. Investigar erro do arquivo main.cf
+2. Verificar logs completos do Postfix
+3. Validar configurações SSL
+4. Testar envio e recebimento de emails
+5. Configurar registros DNS (se necessário)
+6. Monitorar logs por 24h
+7. Fazer backup das configurações
+8. Documentar processo de backup/restore
 
 ## Detalhes Relevantes
 - Todos os scripts foram revisados e otimizados
@@ -94,4 +129,49 @@
 - Nome do serviço alterado para 'app' no EasyPanel
 - Volumes e networks configurados corretamente
 - Dados persistentes configurados com volume maildata
-- Permissões de diretórios ajustadas para vmail:vmail 
+- Permissões de diretórios ajustadas para vmail:vmail
+
+## Informações de Acesso e Segurança
+- Servidor: tonet.dev (103.199.186.117)
+- Hostname do Mail: mail.tonet.dev
+- Conta Principal: luciano@tonet.dev
+- Portas Expostas: 25, 465, 587, 993
+- SSL/TLS: Configurado e ativo
+- Fail2ban: Ativo
+- SpamAssassin: Ativo
+- ClamAV: Ativo
+
+## Manutenção e Monitoramento
+1. **Verificações Diárias:**
+   - Status do container
+   - Logs de erro
+   - Tentativas de acesso suspeitas
+   - Uso de disco dos volumes
+
+2. **Verificações Semanais:**
+   - Updates de segurança
+   - Backup dos volumes
+   - Verificação dos certificados SSL
+   - Status dos serviços antispam
+
+3. **Verificações Mensais:**
+   - Renovação de certificados
+   - Limpeza de logs antigos
+   - Verificação de blacklists
+   - Atualização da imagem base
+
+## Troubleshooting Comum
+1. **Container não inicia:**
+   - Verificar logs com `docker logs [CONTAINER_ID]`
+   - Verificar permissões dos volumes
+   - Verificar configurações do SSL
+
+2. **Problemas de Email:**
+   - Verificar logs em /var/log/mail/
+   - Confirmar status dos serviços (Postfix/Dovecot)
+   - Validar configurações DNS
+
+3. **Problemas de SSL:**
+   - Verificar validade dos certificados
+   - Confirmar permissões dos arquivos
+   - Validar configurações do Postfix/Dovecot 
