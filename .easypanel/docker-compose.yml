@@ -10,11 +10,10 @@ services:
     hostname: ${HOSTNAME}
     domainname: ${DOMAINNAME}
     ports:
-      - "25:25"
-      - "143:143"
-      - "465:465"
-      - "587:587"
-      - "993:993"
+      - "25:25"    # SMTP (recebimento)
+      - "465:465"  # SMTP sobre SSL (envio seguro legado)
+      - "587:587"  # SMTP com STARTTLS (envio seguro moderno)
+      - "993:993"  # IMAP sobre SSL (leitura segura)
     volumes:
       - maildata:/tmp/docker-mailserver
       - maildata:/var/mail
@@ -34,19 +33,15 @@ services:
       - MAIL_HOSTNAME
       - POSTMASTER_ADDRESS
       - TZ
-      - ENABLE_SPAMASSASSIN
-      - ENABLE_CLAMAV
-      - ENABLE_FAIL2BAN
-      - ENABLE_POSTGREY
-      - ONE_DIR
-      - PERMIT_DOCKER
-      - ENABLE_POSTFIX_VIRTUAL_TRANSPORT
-      - POSTFIX_DAGENT
-      - REPORT_RECIPIENT
-      - DOVECOT_MAILBOX_FORMAT
-      - POSTFIX_INET_PROTOCOLS
-      - DOVECOT_INET_PROTOCOLS
-      - DMS_DEBUG
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=1
+      - ONE_DIR=1
+      - PERMIT_DOCKER=network
+      - POSTFIX_INET_PROTOCOLS=ipv4
+      - DOVECOT_INET_PROTOCOLS=ipv4
+      - DMS_DEBUG=0
     cap_add:
       - NET_ADMIN
       - SYS_PTRACE
@@ -63,19 +58,6 @@ services:
     networks:
       - easypanel
 
-  roundcube:
-    image: roundcube/roundcubemail:1.6.9-apache
-    container_name: roundcube
-    depends_on:
-      - app
-    env_file:
-      - roundcube.env
-    volumes:
-      - roundcube_data:/var/www/html
-    networks:
-      - easypanel
-    restart: unless-stopped
-
 volumes:
   maildata:
     driver: local
@@ -87,9 +69,7 @@ volumes:
     driver: local
   ssl-certs:
     driver: local
-  roundcube_data:
-    driver: local
 
 networks:
   easypanel:
-    external: true 
+    external: true

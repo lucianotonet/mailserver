@@ -16,6 +16,8 @@
 - Configuração de volumes persistentes para dados do mailserver
 - Correção das permissões de diretórios
 - Configuração do volume maildata para persistência
+- Remoção do Roundcube e otimização para clientes externos
+- Criação do guia de configuração para clientes de email
 
 ## Scripts do Projeto
 1. setup.sh: Script principal de configuração
@@ -56,6 +58,7 @@
 - Ajuste necessário no docker-compose.yml para EasyPanel (resolvido)
 - Perda de dados após rebuild (resolvido com volumes persistentes)
 - Problemas de permissão em diretórios (resolvido)
+- Complexidade desnecessária com Roundcube (resolvido - removido)
 
 ## Progresso Atual
 - Scripts organizados e otimizados
@@ -64,10 +67,12 @@
 - Sistema de verificação DNS robusto
 - Setup local automatizado
 - Processo de deploy documentado
-- Docker-compose.yml ajustado para EasyPanel
+- Docker-compose.yml otimizado
 - Dockerfile otimizado para deploy
 - Volumes persistentes configurados
 - Permissões de diretórios corrigidas
+- Roundcube removido para simplificação
+- Guia de configuração para clientes externos criado
 
 ## Próximos Passos
 1. Fazer commit das alterações
@@ -76,7 +81,8 @@
 4. Validar configurações com check-config.sh
 5. Configurar o domínio no provedor DNS
 6. Executar verificacao-dns.sh para validar configuração
-7. Testar fluxo de emails com ferramentas como swaks
+7. Testar conexões com clientes externos
+8. Validar certificados SSL em produção
 
 ## Detalhes Relevantes
 - Todos os scripts foram revisados e otimizados
